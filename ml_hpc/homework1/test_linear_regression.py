@@ -3,6 +3,9 @@ from sklearn import datasets
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+from sklearn.datasets import make_regression
+import pandas as pd
+import time
 
 
 diabetes = datasets.load_diabetes()
@@ -59,3 +62,51 @@ sns.despine()
 plt.tight_layout()
 plt.savefig('actual_vs_predicted_numpy.png', dpi=300, bbox_inches='tight')
 plt.close()
+
+
+# === Benchmark section ===
+
+n_samples_list = [10000, 100000, 500000, 1000000]
+n_features_list = [10, 50, 100, 1000]
+
+results = []
+
+for n_samples in n_samples_list:
+    for n_features in n_features_list:
+        print(f"Training with n_samples={n_samples}, n_features={n_features} ...")
+
+        X, y = make_regression(
+            n_samples=n_samples,
+            n_features=n_features,
+            noise=0.1,
+            random_state=42
+        )
+
+        model = LinearRegression()
+        start = time.time()
+        model.fit(X, y)
+        elapsed = time.time() - start
+
+        results.append({
+            'n_samples': n_samples,
+            'n_features': n_features,
+            'time': elapsed
+        })
+        print(f" => Executed in {elapsed:.3f} seconds")
+
+# Convert to DataFrame
+df = pd.DataFrame(results)
+
+# Plot
+sns.set(style="whitegrid", font_scale=1.2)
+plt.figure(figsize=(10, 6))
+sns.lineplot(data=df, x='n_samples', y='time', hue='n_features', marker='o')
+plt.xscale('log')
+plt.yscale('log')
+plt.xlabel('Number of Samples (log scale)')
+plt.ylabel('Execution Time (s, log scale)')
+plt.title('Linear Regression Closed-Form Benchmark')
+plt.tight_layout()
+plt.savefig('benchmark_results.png', dpi=300)
+plt.show()
+
