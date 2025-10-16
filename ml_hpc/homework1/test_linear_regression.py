@@ -1,4 +1,4 @@
-from linear_regression_incomplete import LinearRegression
+from linear_regression_complete import LinearRegression
 from sklearn import datasets
 import matplotlib.pyplot as plt
 import seaborn as sns
