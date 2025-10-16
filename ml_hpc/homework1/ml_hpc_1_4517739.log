@@ -1,0 +1,3 @@
+/var/spool/slurmd/job4517739/slurm_script: line 27: 2637889 Killed                  python test_linear_regression.py
+ERROR: Script finished with exit code 137.
+slurmstepd: error: Detected 1 oom_kill event in StepId=4517739.batch. Some of the step tasks have been OOM Killed.
